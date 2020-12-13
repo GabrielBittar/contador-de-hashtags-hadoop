@@ -9,4 +9,20 @@ public class ContaHashtagMapper extends Mapper<Object, Text, Text, IntWritable>{
     private final static IntWritable numeroUm = new IntWritable(1);
     private final Text palavra = new Text();
 
+    @Override
+    public void map(Object key, Text value, Context context) throws IOException, InterruptedException
+    {
+        // Transforma as entradas em token
+        StringTokenizer tokenizer = new StringTokenizer(value.toString());
+
+        while (tokenizer.hasMoreTokens()){
+            String token = tokenizer.nextToken();
+            if(token.startsWith("#")){
+                palavra.set(token.toLowerCase()
+                       .replaceAll("[^a-zA-Z#]", ""));
+                context.write(palavra, numeroUm);
+            }
+        }
+    }
+
 }
